@@ -1,0 +1,98 @@
+import java.io.*;
+
+public class Product {
+    String name;
+    boolean precence;
+    int price;
+
+    static int counterForPrecence = 0;
+    static int sum;
+
+
+    public Product() throws IOException {
+        String res;
+        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Write the product name: ");
+        this.name = input.readLine();
+        System.out.print("\nWrite the price: ");
+        this.price = Integer.parseInt(input.readLine());
+        while (true) {
+            System.out.print("\nPrecence(Yes/No): ");
+            res = input.readLine();
+            if (res.equals("Yes")) {
+                this.precence = true;
+                System.out.println("Product in precence");
+                counterForPrecence++;
+                break;
+            } else if (res.equals("No")) {
+                this.precence = false;
+                System.out.println("Product is not in precence");
+                break;
+            } else System.out.print("\nError!");
+        }
+
+    }
+    public void InputInFile()throws IOException{
+        File file = new File("document.txt");
+        //file.deleteOnExit(); //файл удалится после завершения работы виртуальной машины Java
+        //поток для записи в файл
+        FileWriter writer;
+        writer = new FileWriter(file,true);
+        writer.append("\nThe name of product "+this.name+"; price: "+this.price+"; ");
+        if (this.precence){
+            writer.append("in precence.\n");
+        }
+        else {
+            writer.append("not in precence.\n");
+        }
+        writer.append("\nProducts in precence: " +counterForPrecence);
+        writer.write("\nTotal sum: "+String.valueOf(sum));
+        writer.flush();
+        writer.close();
+    }
+
+    public static void InputExtraInform() throws IOException{
+        File file = new File("document.txt");
+        FileWriter writer;
+        writer = new FileWriter(file,true);
+        writer.append("\nProducts in precence: " +counterForPrecence);
+        writer.write("\nTotal sum: "+String.valueOf(sum));
+        writer.flush();
+        writer.close();
+    }
+
+    //статический метод вывода информации из файла
+    public static void OutputOfFile()throws IOException{
+        File file = new File("document.txt");
+        //поток для вывода информации
+        FileReader reader;
+        char buffer[];
+        int numb;
+        buffer=new char[1];
+        reader = new FileReader(file);
+        do{
+            numb=reader.read(buffer);
+            System.out.print(buffer[0]);
+        }while(numb==1);
+        reader.close();
+    }
+
+
+    public static void main(String[] args) throws IOException{
+        Product[] products;
+        products=new Product[3];
+
+        for (int i=0; i<3; i++){
+            products[i]=new Product();
+            sum += products[i].price;
+        }
+
+        for(int i=0;i<3;i++){
+            products[i].InputInFile();
+        }
+
+        InputExtraInform();
+
+        OutputOfFile();
+    }
+}
